@@ -1,10 +1,18 @@
+// Libraries
 const fs = require("fs");
 const process = require("process");
 const dotenv = require("dotenv");
 dotenv.config();
 
+// Internals
 const exitcodes = require("./utilities/exitcodes.utils");
-const { logger, printTitle } = require("./utilities/logging.utils");
+const cliArgs = require("minimist")(process.argv.slice(2));
+const appUtils = require("./utilities/application.utils");
+const { logger, printTitle, printHelp, getExecutionMode } = require("./utilities/logging.utils");
+
+// Controllers
+const folderModeController = require("./controllers/folderMode.controller");
+
 
 if(!fs.existsSync(".env"))
 {
@@ -23,5 +31,22 @@ if (!process.env.API_KEY || !process.env.API_BASE_URL)
     process.exit(exitcodes.NO_API_IN_ENV);
 }
 
-// Everything is good
+
+if(process.argv.length <= 2 || (!cliArgs.folder && !cliArgs.file))
+{
+    //Invalid CLI args were passed, show help and exit
+    printHelp();
+    process.exit(exitcodes.SHOW_HELP_MESSAGE);    
+}
+
+//Everything is good, print the title
 printTitle();
+
+
+//Delegate execution via controllers
+const executionMode = appUtils.getExecutionMode(cliArgs);
+
+if(executionMode == "folder")
+    folderModeController.execute(cliArgs);
+
+

@@ -1,0 +1,18 @@
+Forum 1:
+  meta:
+    description: Something here
+    
+  Subforum 1.1:
+    - Forum nested 1
+    - Forum nested 2
+    - Forum nested 3
+
+  Subforum 1.2:
+    - Forum nested 1
+    - Forum nested 2
+    - Forum nested 3
+
+Forum 2:
+  Subforum 2.1:
+    - a forum
+    - a forum pt 2
