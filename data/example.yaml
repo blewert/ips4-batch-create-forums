@@ -2,7 +2,7 @@ Forum 1:
   meta:
     description: Something here
     
-  Subforum 1.1:
+  Subforum 1.1 <adminOnly>:
     - Forum nested 1
     - Forum nested 2
     - Forum nested 3

@@ -7,8 +7,11 @@ const fileModeController = {};
 
 const YamlForumParser = require("../common/YamlForumParser");
 
-fileModeController.execute = (cliArgs) =>
+fileModeController.execute = (executionData) =>
 {
+    //Get alias
+    const { cliArgs } = executionData;
+
     //Run in folder mode
     logger.info(`Running in file mode, destination file is ${cliArgs.file}`);
 
@@ -18,14 +21,15 @@ fileModeController.execute = (cliArgs) =>
         logger.error(`The specified file '${cliArgs.file}' does not exist.`);
         logger.error("Exiting.");
         process.exit(exitcodes.FILE_DOESNT_EXIST);
-    }
+    };
 
     try
     {
         logger.info(">> Parsing file " + cliArgs.file);
 
         const path = cliArgs.file;
-        const parser = new YamlForumParser(process.env.API_BASE_URL, process.env.API_KEY, cliArgs.parentForumId);
+        const parser = new YamlForumParser(executionData.apiBaseURL, executionData.apiKey, cliArgs.parentForumId);
+        parser.setPermissionSet(executionData.permissions || {});
         parser.createForumsFromFile(path);
     }
     catch (err)

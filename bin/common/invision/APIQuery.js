@@ -55,11 +55,11 @@ class APIQuery
 
             //If the value is an object, map it shallowly
             if(!Array.isArray(paramValue) && typeof(paramValue) == "object")
-                return Object.keys(paramValue).map(paramValueKey => `${paramKey}[${paramValueKey}]=${paramValue[paramValueKey]}`);
+                return Object.keys(paramValue).map(paramValueKey => `${paramKey}[${paramValueKey}]=${paramValue[paramValueKey]}`).join("&");
 
             //If the value is an array, map it with indices
             if(Array.isArray(paramValue))
-                return paramValue.map((value, index) => `${paramKey}[${index}]=${value}`);
+                return paramValue.map((value, index) => `${paramKey}[${index}]=${value}`).join("&");
 
             //Otherwise it's just plain ol' data
             return `${paramKey}=${paramValue}`

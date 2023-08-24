@@ -19,6 +19,7 @@ const folderModeController = require("./controllers/folderMode.controller");
 const fileModeController = require("./controllers/fileMode.controller");
 const { exit } = require("process");
 
+
 async function main()
 {
     //Are we in interactive mode?
@@ -44,6 +45,21 @@ async function main()
     //API key && base URL
     let apiKey = cliArgs.apiKey || process.env.API_KEY;
     let apiBaseURL = cliArgs.apiBaseUrl || process.env.API_BASE_URL;
+    let permissionsFile = cliArgs.permissionsFile;
+    let permissionsObj = null;
+
+    if(!permissionsFile)
+        logger.warn("No permissions file passed; any references to permission sets in parsed YML will be ignored");
+
+    if(permissionsFile && !fs.existsSync(permissionsFile))
+    {
+        logger.error("Permissions file doesn't exist, couldn't open it for parsing.");
+        logger.error("Exiting");
+        process.exit(exitcodes.PERMISSIONS_FILE_NOT_FOUND);
+    }
+
+    //Parse permissions
+    permissionsObj = appUtils.parsePermissionsFile(permissionsFile);
 
     if(!fs.existsSync(".env"))
         logger.warn("No .env file found. Relying on command-line parameters.");
@@ -84,11 +100,21 @@ async function main()
 
     //-------------
 
+    //Get all data ready to send over
+    const executionData = {
+        cliArgs,
+        apiKey,
+        apiBaseURL,
+        permissions: permissionsObj
+    }
+
+    //-------------
+
     if(executionMode == "folder")
-        folderModeController.execute(cliArgs);
+        folderModeController.execute(executionData);
 
     else if(executionMode == "file")
-        fileModeController.execute(cliArgs);
+        fileModeController.execute(executionData);
 }
 
 main();
