@@ -1,7 +1,7 @@
 {
   "name": "ips4-batch-create-forums",
   "version": "0.0.2-a",
-  "description": "A small tool to batch create forums in NodeJS",
+  "description": "A small tool to batch create invision forums in NodeJS",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,6 +17,9 @@
     "tool",
     "ips4"
   ],
+  "bin": {
+    "ips4-create-forums": "./bin/index.js"
+  },
   "author": "Benjamin Williams <b.williams@staffs.ac.uk>",
   "license": "Unlicense",
   "bugs": {
@@ -27,6 +30,7 @@
     "axios": "^1.4.0",
     "dotenv": "^16.3.1",
     "minimist": "^1.2.8",
+    "prompts": "^2.4.2",
     "winston": "^3.10.0",
     "yaml": "^2.3.1"
   }

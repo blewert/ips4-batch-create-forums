@@ -25,7 +25,7 @@ fileModeController.execute = (cliArgs) =>
         logger.info(">> Parsing file " + cliArgs.file);
 
         const path = cliArgs.file;
-        const parser = new YamlForumParser(process.env.API_BASE_URL, process.env.API_KEY);
+        const parser = new YamlForumParser(process.env.API_BASE_URL, process.env.API_KEY, cliArgs.parentForumId);
         parser.createForumsFromFile(path);
     }
     catch (err)

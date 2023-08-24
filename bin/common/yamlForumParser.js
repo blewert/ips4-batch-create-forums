@@ -4,12 +4,13 @@ const { logger } = require("../utilities/logging.utils");
 
 class YamlForumParser
 {
-    constructor(apiBase, apiKey, dryrun=true)
+    constructor(apiBase, apiKey, parentForumId=null, dryrun=true)
     {
         //Set up instance variables
         this.apiBase = apiBase;
         this.apiKey = apiKey;
         this.dryrun = !!dryrun;
+        this.parentForumId = parentForumId;
     }
 
     createForumsFromFile(path, dryrun=true)
@@ -30,7 +31,7 @@ class YamlForumParser
     startIteration(data)
     {
         logger.debug("Starting iteration; dry run is " + (this.dryrun && "enabled") || "disabled");
-        this.iterate(null, data);
+        this.iterate(this.parentForumId || null, data);
     }
 
     createFakeForumID(parent, subForum, options)
