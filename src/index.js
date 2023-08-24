@@ -12,6 +12,7 @@ const { logger, printTitle, printHelp, getExecutionMode } = require("./utilities
 
 // Controllers
 const folderModeController = require("./controllers/folderMode.controller");
+const fileModeController = require("./controllers/fileMode.controller");
 
 
 if(!fs.existsSync(".env"))
@@ -46,7 +47,12 @@ printTitle();
 //Delegate execution via controllers
 const executionMode = appUtils.getExecutionMode(cliArgs);
 
+//-------------
+
 if(executionMode == "folder")
     folderModeController.execute(cliArgs);
+
+else if(executionMode == "file")
+    fileModeController.execute(cliArgs);
 
 

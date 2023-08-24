@@ -51,6 +51,8 @@ folderModeController.execute = (cliArgs) =>
             logger.error("Exiting");
             process.exit(exitcodes.FOLDER_GENERAL_PARSING_ERROR);
         }
+
+        logger.info(">> Parsed!");
     }
 }
 

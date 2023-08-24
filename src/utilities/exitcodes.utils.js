@@ -11,5 +11,9 @@ module.exports = {
     //0xC: Errors relating to folder execution mode
     FOLDER_DOESNT_EXIST: 0xC1,
     NO_PARSEABLE_FILES_IN_FOLDER: 0xC2,
-    FOLDER_GENERAL_PARSING_ERROR: 0xC3
+    FOLDER_GENERAL_PARSING_ERROR: 0xC3,
+
+    //0xD: Errors relating to file execution mode
+    FILE_DOESNT_EXIST: 0xD1,
+    FILE_GENERAL_PARSING_ERROR: 0xD2
 }

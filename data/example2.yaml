@@ -1,0 +1,18 @@
+Forum X:
+  meta:
+    description: Something here
+    
+  Subforum X.1:
+    - Forum nested 1
+    - Forum nested 2
+    - Forum nested 3
+
+  Subforum X.2:
+    - Forum nested 1
+    - Forum nested 2
+    - Forum nested 3
+
+Forum Y:
+  Subforum Y.1:
+    - a forum
+    - a forum pt 2

@@ -30,7 +30,7 @@ class YamlForumParser
     startIteration(data)
     {
         logger.debug("Starting iteration; dry run is " + (this.dryrun && "enabled") || "disabled");
-        return this.iterate(null, data);
+        this.iterate(null, data);
     }
 
     createFakeForumID(parent, subForum, options)
@@ -63,6 +63,7 @@ class YamlForumParser
     iterate(parent, data, level = 0)
     {
         const entries = Object.keys(data);
+
 
         for (let key of entries)
         {
