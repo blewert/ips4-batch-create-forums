@@ -95,5 +95,6 @@ node src/index.js --folder example-files
 |-----|-----|-----|
 | `v0.0.1-a` | 24/08/23 | Prerelease: Basic repository |
 | `v0.0.2-a` | 24/08/23 | Prerelease: Dry run working, both modes supported. Needs REST API interaction
+| `v0.0.3-a` | 24/08/23 | Prerelease: Added interactive mode and CLI argument overrides
 
 

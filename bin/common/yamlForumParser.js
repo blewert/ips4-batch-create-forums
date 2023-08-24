@@ -1,6 +1,7 @@
 const fs = require("fs");
 const yaml = require("yaml");
 const { logger } = require("../utilities/logging.utils");
+const APIForumQuery = require("./invision/APIForumQuery");
 
 class YamlForumParser
 {
@@ -41,9 +42,20 @@ class YamlForumParser
 
         if (options)
         {
-            logger.debug("Creating " + subForum + " with options ");
-            logger.debug(Object.entries(options));
+            // logger.debug("Creating " + subForum + " with options ");
+            // logger.debug(Object.entries(options));
         }
+
+        let query = new APIForumQuery(this.apiBase, this.apiKey);
+
+        query.addParameters({
+            title: subForum,
+            parent: parent || "null",
+            ...options
+        });
+
+        const uri = encodeURI(query.getQuery());
+        console.log(uri);
 
         return Math.floor(Math.random() * 8000);
     }

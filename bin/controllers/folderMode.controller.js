@@ -5,7 +5,7 @@ const { logger } = require("../utilities/logging.utils");
 const exitcodes = require("../utilities/exitcodes.utils");
 const folderModeController = {};
 
-const YamlForumParser = require("../common/yamlForumParser");
+const YamlForumParser = require("../common/YamlForumParser");
 
 folderModeController.execute = (cliArgs) =>
 {
