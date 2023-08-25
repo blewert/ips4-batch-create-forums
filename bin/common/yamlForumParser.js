@@ -12,6 +12,14 @@ class YamlForumParser
         this.apiKey = apiKey;
         this.dryrun = !!dryrun;
         this.parentForumId = parentForumId;
+
+        //Permission set is nothing by default
+        this.permSet = {};
+    }
+
+    setPermissionSet(data)
+    {
+        this.permSet = data;
     }
 
     createForumsFromFile(path, dryrun=true)
@@ -31,46 +39,86 @@ class YamlForumParser
 
     startIteration(data)
     {
-        logger.debug("Starting iteration; dry run is " + (this.dryrun && "enabled") || "disabled");
+        logger.verbose("Starting iteration; dry run is " + (this.dryrun && "enabled") || "disabled");
         this.iterate(this.parentForumId || null, data);
     }
 
-    createFakeForumID(parent, subForum, options)
+    createFakeForumID(parent, subForum, options, targetPermSet)
     {
-        // console.log("Create forum " + parent + ": "+ subForum);
-        // console.log(subForum);
-
-        if (options)
-        {
-            // logger.debug("Creating " + subForum + " with options ");
-            // logger.debug(Object.entries(options));
-        }
-
         let query = new APIForumQuery(this.apiBase, this.apiKey);
 
         query.addParameters({
             title: subForum,
             parent: parent || "null",
-            ...options
+            ...options,
+            permissions: targetPermSet
         });
 
+
         const uri = encodeURI(query.getQuery());
-        console.log(uri);
+        logger.debug(uri);
 
         return Math.floor(Math.random() * 8000);
     }
 
-    createForum(parent, subForum, options)
+    createForum(parent, subForum, options, targetPermSet, iteration)
     {
+        //Remove reserved tokens if needed
+        const forumName = subForum.replace(/\s*\<(.+?)\>$/, "");
+        let returnValue = -1;
+
         if(this.dryrun)
-            return this.createFakeForumID(parent, subForum, options);
-        
-        return null;
+            returnValue = this.createFakeForumID(parent, forumName, options, targetPermSet?.data);        
+
+        if(!iteration.isLeaf)
+        {
+            // logger.verbose("");
+            logger.verbose(this.getSpacer(iteration.level) + `Created forum ${forumName} with id ${returnValue} (parent: ${parent}) \x1b[33m<${targetPermSet?.name}>\x1b[0m`);
+        }
+        else
+        {
+            logger.verbose(this.getSpacer(iteration.level) + `--> Created leaf forum ${forumName} with id ${returnValue} (parent: ${parent}) \x1b[33m<${targetPermSet?.name}>\x1b[0m`);
+        }
+
+        return returnValue;
     }
     
     getSpacer(level) 
     {
         return "   ".repeat(level);
+    }
+
+    getPermSetFromName(name, isLeaf)
+    {
+        const match = name.match(/\<(.+?)\>$/);
+        const permSetObj = (x, y) => { return { name: x, data: y }};
+
+        if(!match)
+        {
+            //Use default if a default profile is found
+            if (Object.keys(this.permSet).includes("default"))
+                return permSetObj("default", this.permSet["default"]);
+
+            //Use leaves if a leaf & profile is found
+            if (Object.keys(this.permSet).includes("leaves") && isLeaf)
+                return permSetObj("leaves", this.permSet["leaves"]);
+
+            //Use nodes if a node & profile is found
+            if (Object.keys(this.permSet).includes("nodes") && !isLeaf)
+                return permSetObj("nodes", this.permSet["nodes"]);
+
+            return permSetObj("null", {});
+        }
+
+        const permSetName = match[1];
+
+        if (permSetName && !Object.keys(this.permSet).includes(permSetName))
+        {
+            logger.warn(`Target perm set ${permSetName} not found in permissions data.`);
+            return permSetObj("null", {});
+        }
+
+        return permSetObj(permSetName, this.permSet[permSetName]);
     }
 
     iterate(parent, data, level = 0)
@@ -82,7 +130,7 @@ class YamlForumParser
         {
             const dataItem = data[key];
 
-            if (key == "meta")
+            if (key == "meta" || key == "permSet")
             {
                 continue;
             }
@@ -91,17 +139,17 @@ class YamlForumParser
 
             if (typeof (dataItem) == "string")
             {
-                const forumId = this.createForum(parent, dataItem, options);
-                logger.debug(this.getSpacer(level) + `--> Created leaf forum ${dataItem} with id ${forumId} (parent: ${parent})`);
+                const targetPermSet = this.getPermSetFromName(dataItem, true);
+                const forumId = this.createForum(parent, dataItem, options, targetPermSet, { level, isLeaf: true });
+                
                 continue;
             }
 
             if (!isNaN(+key))
                 key = data[key];
 
-            const forumId = this.createForum(parent, key, options);
-            logger.debug("");
-            logger.debug(this.getSpacer(level) + `Created forum ${key} with id ${forumId} (parent: ${parent})`);
+            const targetPermSet = this.getPermSetFromName(key, false);
+            const forumId = this.createForum(parent, key, options, targetPermSet, { level, isLeaf: false });
 
             if (typeof (data) != "string")
                 this.iterate(forumId, data[key], level + 1, options);
