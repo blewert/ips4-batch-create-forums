@@ -198,5 +198,5 @@ I:          # <nodes>
 | Documentation of code | Low
 | Create system for categories/non-category forum creation | Medium
 | Build in `axios.post(...)` call and test on forum | High
-
+| Add permissions stuff to `-i` mode and add `-i` to help message | Low
 
