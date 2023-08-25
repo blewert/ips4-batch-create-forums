@@ -31,6 +31,19 @@ module.exports = [
 
     {
         type: "confirm",
+        name: "prompt-permissions",
+        message: "Do you want to use a permissions file to load permission sets?"
+    },
+
+    {
+        type: prev => (prev && "text") || null,
+        name: "permissionsFile",
+        message: "Enter the path to the permissions file",
+        validate: value => fs.existsSync(value) ? true : "File doesn't exist"
+    },
+
+    {
+        type: "confirm",
         name: "folder-prompt",
         message: "Do you want to run in folder mode (i.e. parsing all yml files within a folder)?"
     },

@@ -39,7 +39,7 @@ const printTitle = () =>
  */
 const printHelp = () =>
 {
-    logger.info(`Usage: ${process.argv[1]} --folder <PATH> | --file <PATH> [--parentForumId <ID>, --apiKey <KEY>, --apiBaseUrl <URL>]`);
+    logger.info(`Usage: ${process.argv[1]} --folder <PATH> | --file <PATH> [--parentForumId <ID>, --apiKey <KEY>, --apiBaseUrl <URL>, -i]`);
     logger.info("");
 
     logger.info("\t--folder <PATH>: Will non-recursively run through each file in the given");
@@ -65,6 +65,9 @@ const printHelp = () =>
     logger.info("\t--permissionsFile <PATH>: Specifies a file to read permission sets from, which");
     logger.info("\tcan be specified via a named tag <like_this> at the end of a forum name. More ");
     logger.info("\tinfo can be found in the README file of this repository. ");
+    logger.info("\t");
+
+    logger.info("\t-i: Starts the tool in interactive mode");
     logger.info("\t");
     
     logger.error("Either --folder or --file must be passed to use this program.");
