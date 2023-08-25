@@ -61,6 +61,11 @@ const printHelp = () =>
 
     logger.info("\t--apiBaseUrl <URL>: Specifies a URL override to use rather than in .env");
     logger.info("\t");
+
+    logger.info("\t--permissionsFile <PATH>: Specifies a file to read permission sets from, which");
+    logger.info("\tcan be specified via a named tag <like_this> at the end of a forum name. More ");
+    logger.info("\tinfo can be found in the README file of this repository. ");
+    logger.info("\t");
     
     logger.error("Either --folder or --file must be passed to use this program.");
     logger.error("Exiting");

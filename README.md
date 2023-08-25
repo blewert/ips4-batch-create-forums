@@ -90,11 +90,113 @@ node src/index.js --file something/blah.yaml
 node src/index.js --folder example-files
 ```
 
+
+## Permission sets
+Another thing this tool allows you to do is to specify a collection of "permission sets", which can be applied to the forums listed in the YML data. These specify what users can perform certain actions on the target forum; namely if they can *read*, *view*, *reply* and *attach* (key: attachments). The created forums will then be created using the specified permission set. For example, you could have the two permission sets:
+
+```yml
+adminOnly:
+  view: 4
+  read: 4
+  reply: 4
+  attachments: 4
+
+regularUsersCanOnlyView:
+  view: 4,2,1
+  read: 4,2,1
+  reply: 4
+  attachments: 4
+```
+
+In `adminOnly`, only the group id `4` (could be anything, but in this case we'll assume its an admin) can perform all four actions. In `regularUsersCanOnlyView`, only admins (`4`) and users in group IDs `2` or `1` can view and read. However, only admins (`4`) can reply or attach things.
+
+You could then specify a forum in one of the yaml files to parse, by using angled brackets after the name. Using our two previously created permission sets, we can use it on a forum like so:
+
+```yaml
+Pizza:
+  Cooking:
+    Recipes <regularUsersCanOnlyView>:
+      - Hawaiian <regularUsersCanOnlyView>
+      - Meat feast <regularUsersCanOnlyView>
+
+Admin Portal <adminOnly>:
+  - Reports <adminOnly>
+```
+
+Here, the `Recipes`, `Hawaiian` and `Meat feast` forums will have the permissions set according to the `regularUsersCanOnlyView` permissions set. Equally, the `Admin Portal` and `Reports` forums will have their permissions set to whatever is in the `adminOnly` set.
+
+### Reserved names
+There are three reserved names which can be used in your permissions yml file. The first is `default`, which specifies a default permission set to apply to nodes if none is found in the name. This can be used to save yourself the effort of typing out names if you only want to apply one permission set across all created forums. For example, if we had the forums:
+
+```yml
+Cool forum:
+  Discussion:
+    - Something
+    - Something else
+    - Blah
+  Competitions:
+    - Blah
+    - Something
+  
+Admin Portal <adminOnly>:
+  - Reports <adminOnly>
+```
+
+The `default` permission set would apply to the following forums:
+
+```yml
+Cool forum:               # ✔ <default>
+  Discussion:             # ✔ <default>
+    - Something           # ✔ <default>
+    - Something else      # ✔ <default>
+    - Blah                # ✔ <default>
+  Competitions:           # ✔ <default>
+    - Blah                # ✔ <default>
+    - Something           # ✔ <default>
+  
+Admin Portal <adminOnly>: # ❌ <adminOnly>
+  - Reports <adminOnly>   # ❌ <adminOnly>
+```
+
+-----
+
+The final two are `leaves` and `nodes`. The permission set `leaves` specifies what permissions should be applied by default to "leaf" or terminal nodes of the parsed yml. These will be the "deepest" subforums. The opposite are non-terminal nodes, which is what the `nodes` set targets.
+
+For example, the following structure shows what sets apply to each node in the tree:
+
+```yml
+A:          # <nodes>
+  AB:       # <nodes>
+    ABC:    # <nodes>
+      - D   # <leaves>
+      - E   # <leaves>
+      - F   # <leaves>
+            
+  CD:       # <nodes>
+    - E     # <leaves>
+    - F     # <leaves>
+            
+  G:        # <nodes>
+    - H     # <leaves>
+I:          # <nodes>
+  - J       # <leaves>
+```
+
+
 # Version history
 | Version | Date | Notes | 
 |-----|-----|-----|
 | `v0.0.1-a` | 24/08/23 | Prerelease: Basic repository |
 | `v0.0.2-a` | 24/08/23 | Prerelease: Dry run working, both modes supported. Needs REST API interaction
 | `v0.0.3-a` | 24/08/23 | Prerelease: Added interactive mode and CLI argument overrides
+| `v0.0.4-a` | 25/08/23 | Prerelease: Basic permission sets
+
+
+# To-do
+| Action | Urgency  |
+|--------|----------|
+| Documentation of code | Low
+| Create system for categories/non-category forum creation | Medium
+| Build in `axios.post(...)` call and test on forum | High
 
 
