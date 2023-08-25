@@ -7,7 +7,7 @@ const fileModeController = {};
 
 const YamlForumParser = require("../common/YamlForumParser");
 
-fileModeController.execute = (executionData) =>
+fileModeController.execute = async(executionData) =>
 {
     //Get alias
     const { cliArgs } = executionData;
@@ -28,9 +28,9 @@ fileModeController.execute = (executionData) =>
         logger.info(">> Parsing file " + cliArgs.file);
 
         const path = cliArgs.file;
-        const parser = new YamlForumParser(executionData.apiBaseURL, executionData.apiKey, cliArgs.parentForumId);
+        const parser = new YamlForumParser(executionData.apiBaseURL, executionData.apiKey, cliArgs.parentForumId, cliArgs.dryRun || false);
         parser.setPermissionSet(executionData.permissions || {});
-        parser.createForumsFromFile(path);
+        await parser.createForumsFromFile(path);
     }
     catch (err)
     {

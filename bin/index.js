@@ -111,10 +111,10 @@ async function main()
     //-------------
 
     if(executionMode == "folder")
-        folderModeController.execute(executionData);
+        await folderModeController.execute(executionData);
 
     else if(executionMode == "file")
-        fileModeController.execute(executionData);
+        await fileModeController.execute(executionData);
 }
 
 main();

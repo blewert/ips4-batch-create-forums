@@ -39,7 +39,7 @@ const printTitle = () =>
  */
 const printHelp = () =>
 {
-    logger.info(`Usage: ${process.argv[1]} --folder <PATH> | --file <PATH> [--parentForumId <ID>, --apiKey <KEY>, --apiBaseUrl <URL>, -i]`);
+    logger.info(`Usage: ${process.argv[1]} --folder <PATH> | --file <PATH> [--parentForumId <ID>, --apiKey <KEY>, --apiBaseUrl <URL>, -i, --dryRun]`);
     logger.info("");
 
     logger.info("\t--folder <PATH>: Will non-recursively run through each file in the given");
@@ -60,6 +60,10 @@ const printHelp = () =>
     logger.info("\t");
 
     logger.info("\t--apiBaseUrl <URL>: Specifies a URL override to use rather than in .env");
+    logger.info("\t");
+
+    logger.info("\t--dryRun: Performs a dry run, doesn't actually call any API endpoints. Useful");
+    logger.info("\tfor testing before a real run.");
     logger.info("\t");
 
     logger.info("\t--permissionsFile <PATH>: Specifies a file to read permission sets from, which");

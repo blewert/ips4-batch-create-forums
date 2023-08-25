@@ -7,7 +7,7 @@ const folderModeController = {};
 
 const YamlForumParser = require("../common/YamlForumParser");
 
-folderModeController.execute = (executionData) =>
+folderModeController.execute = async(executionData) =>
 {
     //Alias cliArgs
     const { cliArgs } = executionData;
@@ -44,9 +44,9 @@ folderModeController.execute = (executionData) =>
 
         try
         {
-            const parser = new YamlForumParser(executionData.apiBaseURL, executionData.apiKey);
+            const parser = new YamlForumParser(executionData.apiBaseURL, executionData.apiKey, cliArgs.parentForumId, cliArgs.dryRun || false);
             parser.setPermissionSet(executionData.permissions || {});
-            parser.createForumsFromFile(path);
+            await parser.createForumsFromFile(path);
         }
         catch(err)
         {
