@@ -190,6 +190,7 @@ I:          # <nodes>
 | `v0.0.2-a` | 24/08/23 | Prerelease: Dry run working, both modes supported. Needs REST API interaction
 | `v0.0.3-a` | 24/08/23 | Prerelease: Added interactive mode and CLI argument overrides
 | `v0.0.4-a` | 25/08/23 | Prerelease: Basic permission sets
+| `v0.1.0` | 26/08/23 | First working version
 
 
 # To-do
@@ -197,6 +198,5 @@ I:          # <nodes>
 |--------|----------|
 | Documentation of code | Low
 | Create system for categories/non-category forum creation | Medium
-| Build in `axios.post(...)` call and test on forum | High
-| Add permissions stuff to `-i` mode and add `-i` to help message | Low
+| Add `--dryRun` to `-i` | Low
 
