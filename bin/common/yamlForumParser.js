@@ -2,6 +2,8 @@ const fs = require("fs");
 const yaml = require("yaml");
 const { logger } = require("../utilities/logging.utils");
 const APIForumQuery = require("./invision/APIForumQuery");
+const axios = require("axios");
+
 
 class YamlForumParser
 {
@@ -22,7 +24,7 @@ class YamlForumParser
         this.permSet = data;
     }
 
-    createForumsFromFile(path, dryrun=true)
+    async createForumsFromFile(path, dryrun=true)
     {
         //It should exist at this point, but lets make sure
         if(!fs.existsSync(path))
@@ -34,21 +36,22 @@ class YamlForumParser
         const yamlObj = yaml.parse(forumsFile);
 
         //The source has been parsed. Iterate recursively over the object
-        this.startIteration(yamlObj);
+        await this.startIteration(yamlObj);
     }
 
-    startIteration(data)
+    async startIteration(data)
     {
         logger.verbose("Starting iteration; dry run is " + (this.dryrun && "enabled") || "disabled");
-        this.iterate(this.parentForumId || null, data);
+        await this.iterate(this.parentForumId || null, data);
     }
 
-    createFakeForumID(parent, subForum, options, targetPermSet)
+    async createFakeForumID(parent, subForum, options, targetPermSet, leaf)
     {
         let query = new APIForumQuery(this.apiBase, this.apiKey);
 
         query.addParameters({
             title: subForum,
+            type: (leaf && "normal") || "category", 
             parent: parent || "null",
             ...options,
             permissions: targetPermSet
@@ -58,17 +61,60 @@ class YamlForumParser
         const uri = encodeURI(query.getQuery());
         logger.debug(uri);
 
-        return Math.floor(Math.random() * 8000);
+        // console.log(query.getQuery());
+
+        const value = Math.floor(Math.random() * 8000);
+
+        await new Promise(res => setTimeout(res, 500));
+
+        return value;
     }
 
-    createForum(parent, subForum, options, targetPermSet, iteration)
+    async createRealForumID(parent, forumName, options, targetPermSet, leaf)
+    {
+        let query = new APIForumQuery(this.apiBase, this.apiKey);
+
+        if(!options)
+            options = { };
+
+        if(!options?.description)
+            options.description = " ";
+
+        query.addParameters({
+            title: forumName,
+            type: (leaf && "normal") || "category",
+            parent: parent || "null",
+            ...options,
+            permissions: targetPermSet
+        });
+
+
+        const uri = encodeURI(query.getQuery());
+        // console.log(query.getQuery());
+
+        const resp = await axios.post(uri);
+        const id = resp.data.id;
+
+        // console.log(id);
+
+        return id;
+
+    }
+
+    async createForum(parent, subForum, options, targetPermSet, iteration)
     {
         //Remove reserved tokens if needed
         const forumName = subForum.replace(/\s*\<(.+?)\>$/, "");
         let returnValue = -1;
 
+        // console.log(this.dryrun);
         if(this.dryrun)
-            returnValue = this.createFakeForumID(parent, forumName, options, targetPermSet?.data);        
+            returnValue = await this.createFakeForumID(parent, forumName, options, targetPermSet?.data, iteration.isLeaf);
+
+        else
+            returnValue = await this.createRealForumID(parent, forumName, options, targetPermSet?.data, iteration.isLeaf);
+
+
 
         if(!iteration.isLeaf)
         {
@@ -121,7 +167,7 @@ class YamlForumParser
         return permSetObj(permSetName, this.permSet[permSetName]);
     }
 
-    iterate(parent, data, level = 0)
+    async iterate(parent, data, level = 0)
     {
         const entries = Object.keys(data);
 
@@ -149,7 +195,7 @@ class YamlForumParser
                 key = data[key];
 
             const targetPermSet = this.getPermSetFromName(key, false);
-            const forumId = this.createForum(parent, key, options, targetPermSet, { level, isLeaf: false });
+            const forumId = await this.createForum(parent, key, options, targetPermSet, { level, isLeaf: false });
 
             if (typeof (data) != "string")
                 this.iterate(forumId, data[key], level + 1, options);
