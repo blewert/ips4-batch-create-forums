@@ -1,6 +1,12 @@
 old/*
 old/
 
+# Hide live data from prying eyes
+data/*stoke*
+data/*sul*
+data/*live*
+
+
 # ----------
 
 # Logs

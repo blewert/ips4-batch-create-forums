@@ -16,19 +16,17 @@
 # -------
 
 default:
-  view: 4
-  read: 4
-  reply: 4
-  add: 4
-  attachments: 4
+  view: 4,8,7,6,3
+  read: 4,8,7,6,3
+
+leaves:
+  view: 4,8,7,6,3
+  read: 4,8,7,6,3
+  reply: 4,7,6,3
+  add: 4,7,6,3
+  attachments: 4,7,6,3
 
 # regularPermissions:
-#   view: 4,8,7,6,3
-#   read: 4,8,7,6,3
-#   reply: 4,7,6,3
-#   attachments: 4,7,6,3
-
-# default:
 #   view: 4,8,7,6,3
 #   read: 4,8,7,6,3
 #   reply: 4,7,6,3

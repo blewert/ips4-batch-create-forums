@@ -50,7 +50,6 @@ class YamlForumParser
         let query = new APIForumQuery(this.apiBase, this.apiKey);
 
         query.addParameters({
-            title: subForum,
             type: (leaf && "normal") || "category", 
             parent: parent || "null",
             ...options,
@@ -58,10 +57,14 @@ class YamlForumParser
         });
 
 
-        const uri = encodeURI(query.getQuery());
-        logger.debug(uri);
+        let uri = encodeURI(query.getQuery());
+        uri += "&title=" + encodeURI(subForum);
 
-        // console.log(query.getQuery());
+
+        if (subForum.includes("+") || subForum.includes("&") || subForum.includes("#"))
+            console.log(uri);
+
+
 
         const value = Math.floor(Math.random() * 8000);
 
@@ -81,7 +84,6 @@ class YamlForumParser
             options.description = " ";
 
         query.addParameters({
-            title: forumName,
             type: (leaf && "normal") || "category",
             parent: parent || "null",
             ...options,
@@ -89,8 +91,8 @@ class YamlForumParser
         });
 
 
-        const uri = encodeURI(query.getQuery());
-        // console.log(query.getQuery());
+        let uri = encodeURI(query.getQuery());
+        uri += "&title=" + encodeURI(forumName);
 
         const resp = await axios.post(uri);
         const id = resp.data.id;
@@ -141,13 +143,13 @@ class YamlForumParser
 
         if(!match)
         {
-            //Use default if a default profile is found
-            if (Object.keys(this.permSet).includes("default"))
-                return permSetObj("default", this.permSet["default"]);
-
             //Use leaves if a leaf & profile is found
             if (Object.keys(this.permSet).includes("leaves") && isLeaf)
                 return permSetObj("leaves", this.permSet["leaves"]);
+
+            //Use default if a default profile is found
+            if (Object.keys(this.permSet).includes("default"))
+                return permSetObj("default", this.permSet["default"]);
 
             //Use nodes if a node & profile is found
             if (Object.keys(this.permSet).includes("nodes") && !isLeaf)
