@@ -3,7 +3,7 @@ const yaml = require("yaml");
 const { logger } = require("../utilities/logging.utils");
 const APIForumQuery = require("./invision/APIForumQuery");
 const axios = require("axios");
-
+const chalk = require("chalk");
 
 class YamlForumParser
 {
@@ -117,16 +117,15 @@ class YamlForumParser
             returnValue = await this.createRealForumID(parent, forumName, options, targetPermSet?.data, iteration.isLeaf);
 
 
+        const parentString = chalk.greenBright(`${parent}`);
+        const idString = chalk.greenBright(`${returnValue}`);
+        const targetPermSetName = chalk.yellow(`${targetPermSet?.name}`);
 
         if(!iteration.isLeaf)
-        {
-            // logger.verbose("");
-            logger.verbose(this.getSpacer(iteration.level) + `Created forum ${forumName} with id ${returnValue} (parent: ${parent}) \x1b[33m<${targetPermSet?.name}>\x1b[0m`);
-        }
+            logger.verbose(this.getSpacer(iteration.level) + `Created forum ${forumName} with id ${idString} (parent: ${parentString}) <${targetPermSetName}>`);
+        
         else
-        {
-            logger.verbose(this.getSpacer(iteration.level) + `--> Created leaf forum ${forumName} with id ${returnValue} (parent: ${parent}) \x1b[33m<${targetPermSet?.name}>\x1b[0m`);
-        }
+            logger.verbose(this.getSpacer(iteration.level) + `--> Created leaf forum ${forumName} with id ${idString} (parent: ${parentString}) <${targetPermSetName}>`);
 
         return returnValue;
     }

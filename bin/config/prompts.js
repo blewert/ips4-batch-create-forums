@@ -17,7 +17,7 @@ module.exports = [
 
     {
         type: prev => (prev && "number") || null,
-        name: "forumParentId",
+        name: "parentForumId",
         message: "Enter the ID of the parent forum to insert under",
         validate: x => !isNaN(+x)
     },
