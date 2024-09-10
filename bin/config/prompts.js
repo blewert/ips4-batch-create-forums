@@ -4,6 +4,13 @@ const fs = require("fs");
 module.exports = [
     {
         type: "confirm",
+        name: "dryRun",
+        message: "Do you want to run the tool in dry-run mode (no actual changes made)?",
+        initial: "y"
+    },
+
+    {
+        type: "confirm",
         name: "useParentId",
         message: "Do you want to insert the forums under a particular forum?"
     },

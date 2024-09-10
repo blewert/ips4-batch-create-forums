@@ -44,10 +44,9 @@ const printHelp = () =>
     const baseFileName = path.basename(process.argv[1]);
 
     logger.info("");
-    logger.info("+---------------------------------------------+");
-    logger.info("| ips4 CLI subforum batch creator tool        |");
-    logger.info("| Benjamin Williams <b.williams@staffs.ac.uk> |");
-    logger.info("+---------------------------------------------+");
+    logger.info(`${package.name} [${package.version}]`);
+    logger.info(`License: ${package.license}`);
+    logger.info(`Created by: ${package.author}`);
     logger.info("");
 
     logger.info(chalk.greenBright(`Usage: `) + `${baseFileName} --folder <PATH> | --file <PATH>`);

@@ -42,6 +42,7 @@ async function main()
             ...cliArgs,
             ...data
         }
+
     }
 
     if (process.argv.length <= 2 || (!cliArgs.folder && !cliArgs.file) || helpSpecified)
