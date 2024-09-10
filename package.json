@@ -1,6 +1,6 @@
 {
   "name": "ips4-batch-create-forums",
-  "version": "0.0.2-a",
+  "version": "0.1.1",
   "description": "A small tool to batch create invision forums in NodeJS",
   "main": "src/index.js",
   "scripts": {
