@@ -22,6 +22,15 @@ const { exit } = require("process");
 
 async function main()
 {
+    const helpSpecified = (cliArgs.help || cliArgs.h);
+
+    if (process.argv.length <= 2 || (!cliArgs.folder && !cliArgs.file) || helpSpecified)
+    {
+        //Invalid CLI args were passed, show help and exit
+        printHelp();
+        process.exit(exitcodes.SHOW_HELP_MESSAGE);
+    }
+
     //Are we in interactive mode?
     const isInInteractiveMode = cliArgs.i || cliArgs.interactiveMode;
 
@@ -81,13 +90,6 @@ async function main()
         logger.error("try again and specify only either --folder or --file.");
         logger.error("Exiting");
         process.exit(exitcodes.FOLDER_AND_FILE_SPECIFIED);
-    }
-
-    if(process.argv.length <= 2 || (!cliArgs.folder && !cliArgs.file))
-    {
-        //Invalid CLI args were passed, show help and exit
-        printHelp();
-        process.exit(exitcodes.SHOW_HELP_MESSAGE);    
     }
 
     //Everything is good, print the title
