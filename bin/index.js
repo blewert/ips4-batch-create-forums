@@ -99,6 +99,24 @@ async function main()
         printTitle();
 
 
+    if(!cliArgs?.dryRun)
+    {
+        const response = await prompts([
+            {
+                type: "confirm",
+                name: "confirm",
+                message: "The tool is about to run in live mode, i.e. real data will be affected. Are you sure you want to continue?",
+                initial: "n"
+            },
+        ])
+
+        if(!response.confirm)
+        {
+            logger.info("No worries, exiting!");
+            process.exit(exitcodes.BACKOUT_LIVE_DATA);
+        }
+    }
+
     //Delegate execution via controllers
     const executionMode = appUtils.getExecutionMode(cliArgs);
 

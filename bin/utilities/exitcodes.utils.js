@@ -9,6 +9,7 @@ module.exports = {
     
     //0xB: Warnings / non-fatal
     SHOW_HELP_MESSAGE: 0xB1,
+    BACKOUT_LIVE_DATA: 0xB2,
     
     //0xC: Errors relating to folder execution mode
     FOLDER_DOESNT_EXIST: 0xC1,
