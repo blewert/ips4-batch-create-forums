@@ -24,18 +24,11 @@ async function main()
 {
     const helpSpecified = (cliArgs.help || cliArgs.h);
 
-    if (process.argv.length <= 2 || (!cliArgs.folder && !cliArgs.file) || helpSpecified)
-    {
-        //Invalid CLI args were passed, show help and exit
-        printHelp();
-        process.exit(exitcodes.SHOW_HELP_MESSAGE);
-    }
-
     //Are we in interactive mode?
     const isInInteractiveMode = cliArgs.i || cliArgs.interactiveMode;
 
     //Prompt if interactive is supplied
-    if(isInInteractiveMode)
+    if(isInInteractiveMode && !helpSpecified)
     {
         //Print the title and a message
         printTitle();
@@ -50,6 +43,14 @@ async function main()
             ...data
         }
     }
+
+    if (process.argv.length <= 2 || (!cliArgs.folder && !cliArgs.file) || helpSpecified)
+    {
+        //Invalid CLI args were passed, show help and exit
+        printHelp();
+        process.exit(exitcodes.SHOW_HELP_MESSAGE);
+    }
+
 
     //API key && base URL
     let apiKey = cliArgs.apiKey || process.env.API_KEY;
