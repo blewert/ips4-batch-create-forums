@@ -18,6 +18,7 @@ const promptData = require("./config/prompts");
 const folderModeController = require("./controllers/folderMode.controller");
 const fileModeController = require("./controllers/fileMode.controller");
 const { exit } = require("process");
+const chalk = require("chalk");
 
 
 async function main()
@@ -44,7 +45,7 @@ async function main()
         }
 
     }
-
+    
     if (process.argv.length <= 2 || (!cliArgs.folder && !cliArgs.file) || helpSpecified)
     {
         //Invalid CLI args were passed, show help and exit

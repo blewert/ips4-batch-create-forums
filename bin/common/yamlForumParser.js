@@ -58,13 +58,10 @@ class YamlForumParser
 
 
         let uri = encodeURI(query.getQuery());
-        uri += "&title=" + encodeURI(subForum);
+        uri += "&title=" + encodeURIComponent(subForum);
 
-
-        if (subForum.includes("+") || subForum.includes("&") || subForum.includes("#"))
-            console.log(uri);
-
-
+        // if (subForum.includes("+") || subForum.includes("&") || subForum.includes("#"))
+        logger.debug(uri);
 
         const value = Math.floor(Math.random() * 8000);
 
@@ -92,8 +89,10 @@ class YamlForumParser
 
 
         let uri = encodeURI(query.getQuery());
-        uri += "&title=" + encodeURI(forumName);
+        uri += "&title=" + encodeURIComponent(forumName);
 
+        logger.debug(uri);
+        
         const resp = await axios.post(uri);
         const id = resp.data.id;
 
